@@ -11,7 +11,7 @@ class Node {
         this.next = null;   // Initialize next as null since it's the end of the list
     }
 }
-public class LinkedList {
+public class LL {
     public static void main(String[] args) {
         int[] arr = {2, 5, 8, 7};
         // Creating a new Node with the value from the array
