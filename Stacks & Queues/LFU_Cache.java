@@ -179,3 +179,11 @@ class LFUCache {
         freqMap.put(node.freq, newList);
     }
 }
+/* Using Stack logic
+    put(key):
+    if full:
+        find min freq element (scan entire stack)
+        remove it
+
+    push new element
+    */
