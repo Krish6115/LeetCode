@@ -5,7 +5,6 @@ rows = 20
 columns = 40
 def create_grid():
     return [[random.choice([0, 1]) for _ in range(columns)] for _ in range(rows)]
-
 def print_grid(grid):
     os.system('cls' if os.name == 'nt' else 'clear')
     for row in grid:
@@ -16,7 +15,6 @@ def print_grid(grid):
             else:
                 line += "."
         print(line)
-
 def count_neighbors(grid, row_index, column_index):
     total = 0
     for i in range(row_index - 1, row_index + 2):
@@ -26,7 +24,6 @@ def count_neighbors(grid, row_index, column_index):
             if 0 <= i < rows and 0 <= j < columns:
                 total += grid[i][j]
     return total
-
 def next_generation(grid):
     new_grid = [[0 for _ in range(columns)] for _ in range(rows)]
     for i in range(rows):
