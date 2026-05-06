@@ -11,8 +11,8 @@ class Solution {
     where each element represents points on a card.
 
     You must pick exactly k cards from:
-    - either the beginning
-    - or the end
+    - beginning
+    - or end
 
     👉 Return the maximum score possible.
 
@@ -20,70 +20,104 @@ class Solution {
     💡 INTUITION:
     --------------------------------------------
 
-    Since we can only take cards from:
-    - front
-    - back
-
-    We try all possible combinations:
-    - Take all k from front
-    - Take k-1 from front and 1 from back
-    - Take k-2 from front and 2 from back
+    Since we can only pick from front or back,
+    we try all combinations:
+    
+    - take all k from front
+    - take k-1 from front and 1 from back
+    - take k-2 from front and 2 from back
     - ...
-    - Take all k from back
-
-    Instead of recalculating sums every time,
-    we use Sliding Window technique.
+    - take all k from back
 
     --------------------------------------------
-    🚀 APPROACH: Sliding Window
+    🚀 APPROACH 1: BRUTE FORCE
     --------------------------------------------
 
-    Step 1:
-    - Take first k cards initially
+    Idea:
+    Try every possible split:
+    - x cards from front
+    - (k-x) cards from back
 
-    Step 2:
-    - Gradually remove cards from front
-    - Add cards from back
-
-    This efficiently checks all combinations.
+    For every split:
+    - calculate total manually
 
     --------------------------------------------
     🔍 EXAMPLE:
     --------------------------------------------
 
-    cardPoints = [1,2,3,4,5,6,1]
+    arr = [1,2,3,4,5,6,1]
     k = 3
 
-    Initial:
-    Take first 3 cards:
-    [1,2,3] → sum = 6
+    Possibilities:
+    [1,2,3] = 6
+    [1,2] + [1] = 4
+    [1] + [6,1] = 8
+    [5,6,1] = 12
 
-    Shift:
-    Remove 3, add 1
-    → [1,2,1] = 4
-
-    Remove 2, add 6
-    → [1,6,1] = 8
-
-    Remove 1, add 5
-    → [5,6,1] = 12
-
-    Maximum = 12
+    Answer = 12
 
     --------------------------------------------
-    ⚠️ IMPORTANT OBSERVATION:
+    ⏱ COMPLEXITY (Brute Force):
     --------------------------------------------
 
-    We only need to check k combinations.
+    Time Complexity: O(k^2)
+
+    Space Complexity: O(1)
+    */
+
+    public int maxScore_BF(int[] cardPoints, int k) {
+
+        int n = cardPoints.length;
+
+        int maxPoints = 0;
+
+        // x = cards taken from front
+        for (int x = 0; x <= k; x++) {
+
+            int total = 0;
+
+            // Take x cards from front
+            for (int i = 0; i < x; i++) {
+                total += cardPoints[i];
+            }
+
+            // Take remaining cards from back
+            for (int i = 0; i < k - x; i++) {
+                total += cardPoints[n - 1 - i];
+            }
+
+            maxPoints = Math.max(maxPoints, total);
+        }
+
+        return maxPoints;
+    }
+
+
+    /*
+    --------------------------------------------
+    🚀 APPROACH 2: OPTIMAL (Sliding Window)
+    --------------------------------------------
+
+    Instead of recalculating sums every time:
+
+    - Start with first k cards
+    - Remove one card from front
+    - Add one card from back
+
+    This efficiently checks all combinations.
+
+    --------------------------------------------
+    ⚠️ KEY OBSERVATION:
+    --------------------------------------------
+
+    We only need k transitions.
 
     Each move:
-    - remove one from front
-    - add one from back
-
-    So total complexity becomes O(k).
+    - remove from front
+    - add from back
 
     --------------------------------------------
-    ⏱ COMPLEXITY:
+    ⏱ COMPLEXITY (Optimal):
     --------------------------------------------
 
     Time Complexity: O(k)
@@ -100,35 +134,31 @@ class Solution {
     - Start with one side
     - Gradually shift contribution
 
-    This is a very important Sliding Window variation.
+    Very important interview pattern.
     --------------------------------------------
     */
 
-    public int maxScore(int[] cardPoints, int k) {
+    public int maxScore_Optimal(int[] cardPoints, int k) {
 
         int n = cardPoints.length;
 
-        // Sum of first k cards
+        // Take first k cards
         int total = 0;
 
         for (int i = 0; i < k; i++) {
             total += cardPoints[i];
         }
 
-        // Store maximum score
         int maxPoints = total;
 
-        // Slide window:
-        // remove from front and add from back
+        // Slide:
+        // remove from front, add from back
         for (int i = 0; i < k; i++) {
 
-            // Remove from front
             total -= cardPoints[k - 1 - i];
 
-            // Add from back
             total += cardPoints[n - 1 - i];
 
-            // Update maximum
             maxPoints = Math.max(maxPoints, total);
         }
 
